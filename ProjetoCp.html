@@ -1,0 +1,159 @@
+<html>
+
+<head>
+    <title>Projeto</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
+    </style>
+</head>
+
+<body>
+    <script src="js/three.js"></script>
+    <script src="js/controls/OrbitControls.js"></script>
+    <script src="js/loaders/GLTFLoader.js"></script>
+    <script>
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+        //--------
+
+        const gridHelper = new THREE.GridHelper(10, 10);
+        //scene.add(gridHelper);
+
+        const axesHelper = new THREE.AxesHelper(5); 
+        //scene.add(axesHelper); 						
+
+        var loader = new THREE.TextureLoader();
+
+
+       
+        // Iluminação		
+        const directLight = new THREE.DirectionalLight(0xffffff, 2);
+        directLight.position.set(-10, 0, 10);
+        directLight.target.position.set(0, 0, 0);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight, directLight);
+        scene.add(directLight.target);
+
+        // Background
+        fundo = loader.load("img/stone3.jpg");
+        scene.background = fundo;
+
+        
+        // texturas Objetos
+        texturaTocha = loader.load("img/madeira4.jpg");
+        texturaMoeda = loader.load("img/gold1.jpg");
+        // texturaQueijo = loader.load("img/queijo1.jpg")
+        texturaMadeira = loader.load("img/madeira4.jpg")
+        texturaPedra = loader.load("img/stone6.png")
+        texturaBau = loader.load("img/gold4.jpg")
+         
+
+        // Objetos
+
+        // parede
+        const geometry00 = new THREE.PlaneGeometry(25, 10 ); //(1, 32, 16);
+        var material00 = new THREE.MeshBasicMaterial({
+            map: texturaPedra,
+        });
+
+        const parede = new THREE.Mesh(geometry00, material00);
+
+        // chão
+        const geometry0 = new THREE.BoxGeometry(25, 0, 10) //(1, 32, 16);
+        var material0 = new THREE.MeshBasicMaterial({
+            map: texturaMadeira,
+        });
+
+        const chao = new THREE.Mesh(geometry0, material0);
+        // Tocha
+        const geometry1 = new THREE.ConeGeometry(0.18, -1.5, 15); //(1, 32, 16);
+        var material1 = new THREE.MeshBasicMaterial({
+            map: texturaTocha,
+        });
+
+        const tocha1 = new THREE.Mesh(geometry1, material1);
+        const tocha2 = new THREE.Mesh(geometry1, material1);
+
+        // Moeda
+        const geometry2 = new THREE.CylinderGeometry(0.2, 0.2, 0.08) 
+        var material2 = new THREE.MeshToonMaterial({
+            map: texturaMoeda,         
+        });
+
+        const coin1 = new THREE.Mesh(geometry2, material2);
+
+        // Bau
+        const geometry3 = new THREE.BoxGeometry(2, 1, 0.8) 
+        var material3 = new THREE.MeshBasicMaterial({
+            map: texturaBau,
+        });
+
+        const bau = new THREE.Mesh(geometry3, material3);
+
+        // Queijo
+        
+        scene.add(parede, chao, bau, coin1, tocha1, tocha2 );
+        
+        // Camera&Posição objetos
+        tocha1.position.y = 1
+        tocha1.position.x = 4
+        tocha1.position.z = -1.8
+
+        tocha2.position.y = 1
+        tocha2.position.x = -4
+        tocha2.position.z = -1.8
+
+        coin1.position.y = 1
+        coin1.position.z = -2
+
+
+        bau.position.y = -2
+        bau.position.z = -2
+
+
+        chao.position.y = -2.8
+        chao.position.z = 2
+        //chao.position.x = -15
+
+        parede.position.z = -3
+       // parede.position.y = -1.3
+
+
+        
+
+        camera.position.x = 0;
+        camera.position.y = 1;
+        camera.position.z = 5;
+
+        //---------
+        var time = 0;
+        var animate = function () {
+            time += 0.01;
+            requestAnimationFrame(animate);
+
+           coin1.rotation.x += 0.015;
+           coin1.rotation.z += -0.010;
+
+            
+            controls.update();
+
+            renderer.render(scene, camera);
+        };
+        animate();
+    </script>
+</body>
+
+</html>
